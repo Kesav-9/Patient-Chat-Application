@@ -26,13 +26,6 @@ Make sure you have the following installed on your machine:
 - spaCy NLP library
 - pip (Python package manager)
 
-## Setup Instructions
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/your-username/ai-health-chatbot.git
-cd ai-health-chatbot
 
 Commands
 pip install -r requirements.txt
