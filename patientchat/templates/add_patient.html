@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Patient</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            padding: 20px;
+            text-align: center;
+            animation: fadeIn 0.5s;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        input[type="text"], input[type="datetime-local"], input[type="submit"], input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            animation: slideIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Add Patient</h2>
+    <form method="post" action="{% url 'add_patient' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="first_name">First Name:</label>
+            <input type="text" name="first_name" id="first_name" placeholder="First Name" required>
+        </div>
+        <div class="form-group">
+            <label for="last_name">Last Name:</label>
+            <input type="text" name="last_name" id="last_name" placeholder="Last Name" required>
+        </div>
+        <div class="form-group">
+            <label for="date_of_birth">Date of Birth:</label>
+            <input type="date" id="date_of_birth" name="date_of_birth" required>
+        </div>
+        <div class="form-group">
+            <label for="doctor_name">Doctor's Name:</label>
+            <input type="text" name="doctor_name" id="doctor_name" placeholder="Doctor's Name" required>
+        </div>
+        <div class="form-group">
+            <label for="last_appointment">Last Appointment:</label>
+            <input type="datetime-local" name="last_appointment" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="next_appointment">Next Appointment:</label>
+            <input type="datetime-local" name="next_appointment" id="next_appointment" required>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Add Patient">
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

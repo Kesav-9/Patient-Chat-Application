@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h2 {
+            text-align: center;
+        }
+        .patient-list {
+            margin: 20px 0;
+        }
+        .patient-item {
+            padding: 10px;
+            background: #fff;
+            margin: 10px 0;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .patient-item:hover {
+            background: #e2e2e2;
+        }
+        .chat-box {
+            margin: 20px 0;
+            padding: 15px;
+            background: #fff;
+            border-radius: 5px;
+        }
+        .chat-box h3 {
+            margin-top: 0;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input[type="text"] {
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h2>Chat with AI Bot</h2>
+
+    {% if patient %}
+        <div class="chat-box">
+            <p>Patient: {{ patient.first_name }} {{ patient.last_name }}</p>
+            <p>Doctor: {{ patient.doctor_name }}</p>
+            <p>Next Appointment: {{ patient.next_appointment }}</p>
+        </div>
+    {% else %}
+        <div class="patient-list">
+            <h3>Select a Patient to Chat:</h3>
+            {% for patient in patients %}
+                <div class="patient-item">
+                    <a href="{% url 'chat_with_patient' patient.id %}">{{ patient.first_name }} {{ patient.last_name }}</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form id="chat-form" method="POST">
+        {% csrf_token %}
+        <label for="message">Your Message:</label>
+        <input type="text" id="message" name="message" placeholder="Type your message here..." required>
+        <button type="submit">Send</button>
+    </form>
+
+    <div>
+        <h3>Bot Response:</h3>
+        <p id="bot-response">{{ bot_response }}</p>
+        {% if action_message %}
+            <h4>Action:</h4>
+            <p>{{ action_message }}</p>
+        {% endif %}
+    </div>
+
+    <script>
+        const patientId = "{{ patient.id }}" || null;  // Get the patient ID if available
+    
+        document.getElementById('chat-form').addEventListener('submit', function (e) {
+            e.preventDefault();  // Prevent the default form submission
+        
+            const message = document.getElementById('message').value;
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;  // Get the CSRF token
+        
+            // Send request to the correct URL based on patient selection
+            const url = patientId ? `/chat/${patientId}/` : '/chat/';
+        
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken  // Include the CSRF token in the request headers
+                },
+                body: JSON.stringify({ message: message })  // Send the message in JSON format
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('bot-response').innerText = data.response || data.error;  // Display response or error
+                document.getElementById('message').value = '';  // Clear the input field
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+    
+    
+
+</body>
+</html>
